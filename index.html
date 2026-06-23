@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,14 +11,49 @@
       href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght,MONO@0,300..800,1;1,300..800,1&display=swap"
       rel="stylesheet"
     />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              ink: "#0c0c0e",
+              panel: "#141615",
+              panel2: "#1a1d1b",
+              brand: "#3ee089",
+              branddim: "#1f7a52",
+              line: "#262927",
+              ink2: "#ece8e0",
+              dim: "#75807a",
+            },
+            fontFamily: {
+              mono: ['"Google Sans Code"', "monospace"],
+            },
+            keyframes: {
+              pulseGlow: {
+                "0%, 100%": { boxShadow: "0 0 0 0 rgba(62,224,137,0.5)" },
+                "50%": { boxShadow: "0 0 0 6px rgba(62,224,137,0)" },
+              },
+              blink: { "50%": { opacity: "0" } },
+            },
+            animation: {
+              "pulse-glow": "pulseGlow 2s infinite",
+              blink: "blink 1s step-start infinite",
+            },
+          },
+        },
+      };
+    </script>
+
     <script
       defer
       src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
     ></script>
-
-    <link rel="stylesheet" href="styles.css" />
   </head>
+
   <body
+    class="bg-ink text-ink2 font-mono antialiased leading-relaxed selection:bg-brand selection:text-ink"
     x-data="{
     menuOpen:false,
     active:'about',
@@ -50,395 +85,1130 @@
       tick();
     },
     copyEmail(){
-      navigator.clipboard.writeText('you@example.com');
+      navigator.clipboard.writeText('jwachira40@gmail.com');
       this.$refs.copyMsg.textContent = 'Copied!';
       setTimeout(() => this.$refs.copyMsg.textContent = '', 1800);
     }
   }"
   >
-    <div class="progress-bar" :style="`width: ${scrollPct}%`"></div>
+    <!-- SCROLL PROGRESS -->
+    <div
+      class="fixed top-0 left-0 h-0.5 bg-brand z-[100] transition-[width] duration-100 ease-linear motion-reduce:transition-none"
+      :style="`width: ${scrollPct}%`"
+    ></div>
 
-    <header>
-      <nav>
-        <div class="logo">JIMMY<span>.</span>DEV</div>
-        <div class="navlinks">
-          <a href="#about" :class="active === 'about' && 'active'">About</a>
-          <a href="#stack" :class="active === 'stack' && 'active'">Stack</a>
-          <a href="#work" :class="active === 'work' && 'active'">Work</a>
-          <a href="#contact" :class="active === 'contact' && 'active'"
+    <!-- HEADER / NAV -->
+    <header
+      class="sticky top-0 z-50 bg-ink/85 backdrop-blur-md border-b border-line"
+    >
+      <nav
+        class="flex items-center justify-between px-6 py-[18px] max-w-[1100px] mx-auto relative"
+      >
+        <div class="text-sm font-semibold tracking-wide">
+          JIMMY<span class="text-brand">.</span>DEV
+        </div>
+
+        <div class="hidden sm:flex gap-8 text-[13px]">
+          <a
+            href="#about"
+            class="pb-1 border-b-2 transition-colors"
+            :class="active==='about' ? 'text-brand border-brand' : 'text-dim border-transparent hover:text-brand'"
+            >About</a
+          >
+          <a
+            href="#stack"
+            class="pb-1 border-b-2 transition-colors"
+            :class="active==='stack' ? 'text-brand border-brand' : 'text-dim border-transparent hover:text-brand'"
+            >Stack</a
+          >
+          <a
+            href="#work"
+            class="pb-1 border-b-2 transition-colors"
+            :class="active==='work' ? 'text-brand border-brand' : 'text-dim border-transparent hover:text-brand'"
+            >Work</a
+          >
+          <a
+            href="#contact"
+            class="pb-1 border-b-2 transition-colors"
+            :class="active==='contact' ? 'text-brand border-brand' : 'text-dim border-transparent hover:text-brand'"
             >Contact</a
           >
         </div>
+
         <button
-          class="burger"
+          class="sm:hidden flex flex-col gap-[5px] p-1.5 bg-transparent border-none cursor-pointer"
           @click="menuOpen = !menuOpen"
           aria-label="Toggle menu"
         >
           <span
+            class="w-[22px] h-0.5 bg-ink2 block transition-transform duration-200 motion-reduce:transition-none"
             :style="menuOpen && 'transform:translateY(7px) rotate(45deg)'"
           ></span>
-          <span :style="menuOpen && 'opacity:0'"></span>
           <span
+            class="w-[22px] h-0.5 bg-ink2 block transition-opacity duration-200 motion-reduce:transition-none"
+            :style="menuOpen && 'opacity:0'"
+          ></span>
+          <span
+            class="w-[22px] h-0.5 bg-ink2 block transition-transform duration-200 motion-reduce:transition-none"
             :style="menuOpen && 'transform:translateY(-7px) rotate(-45deg)'"
           ></span>
         </button>
       </nav>
-      <div class="mobile-menu" :class="menuOpen && 'open'">
+
+      <div
+        x-show="menuOpen"
+        x-transition
+        class="sm:hidden flex flex-col border-t border-line bg-ink/95"
+      >
         <a
           href="#about"
           @click="menuOpen=false"
-          :class="active === 'about' && 'active'"
+          class="px-6 py-4 border-b border-line text-sm"
+          :class="active==='about' ? 'text-brand' : 'text-dim'"
           >About</a
         >
         <a
           href="#stack"
           @click="menuOpen=false"
-          :class="active === 'stack' && 'active'"
+          class="px-6 py-4 border-b border-line text-sm"
+          :class="active==='stack' ? 'text-brand' : 'text-dim'"
           >Stack</a
         >
         <a
           href="#work"
           @click="menuOpen=false"
-          :class="active === 'work' && 'active'"
+          class="px-6 py-4 border-b border-line text-sm"
+          :class="active==='work' ? 'text-brand' : 'text-dim'"
           >Work</a
         >
         <a
           href="#contact"
           @click="menuOpen=false"
-          :class="active === 'contact' && 'active'"
+          class="px-6 py-4 border-b border-line text-sm"
+          :class="active==='contact' ? 'text-brand' : 'text-dim'"
           >Contact</a
         >
       </div>
     </header>
 
-    <section class="hero">
-      <div class="hero-inner">
-        <div class="eyebrow">
-          <span class="dot pulse"></span>Available for select work · Nairobi,
-          Kenya
+    <!-- HERO -->
+    <section
+      class="relative overflow-hidden border-b border-line px-6 pt-[120px] pb-[90px]"
+    >
+      <div
+        class="absolute inset-0 opacity-25 bg-[linear-gradient(#262927_1px,transparent_1px),linear-gradient(90deg,#262927_1px,transparent_1px)] [background-size:48px_48px] [mask-image:radial-gradient(circle_at_30%_20%,black_0%,transparent_70%)]"
+      ></div>
+
+      <div class="relative max-w-[1100px] mx-auto">
+        <div
+          class="flex items-center gap-2.5 text-[13px] text-brand uppercase tracking-[1.5px] mb-6"
+        >
+          <span
+            class="w-2 h-2 bg-brand rounded-full inline-block animate-pulse-glow motion-reduce:animate-none"
+          ></span>
+          Available for select work · Nairobi, Kenya
         </div>
-        <h1 x-text="typed"><span class="typed-cursor"></span></h1>
-        <p class="hero-sub">
+
+        <h1
+          class="font-bold text-[clamp(40px,7vw,76px)] leading-[1.02] tracking-[-1px] max-w-[780px]"
+        >
+          <span x-text="typed"></span>
+          <span
+            class="inline-block w-[3px] h-[0.85em] bg-brand ml-1 align-middle animate-blink motion-reduce:animate-none"
+          ></span>
+        </h1>
+
+        <p class="mt-6 text-lg text-dim max-w-[560px]">
           Full-stack developer working in Laravel, Livewire, and Alpine.js —
           turning local market problems into production-ready software.
         </p>
-        <div class="hero-cta">
-          <a href="#work" class="btn btn-primary">View the work →</a>
-          <a href="#contact" class="btn btn-ghost">Get in touch</a>
+
+        <div class="flex gap-3.5 mt-10 flex-wrap">
+          <a
+            href="#work"
+            class="inline-flex items-center gap-2 text-[13px] font-medium px-6 py-3.5 border border-brand bg-brand text-ink transition-all hover:-translate-y-0.5 hover:bg-[#5cf0a3] motion-reduce:transform-none"
+          >
+            View the work →
+          </a>
+          <a
+            href="#contact"
+            class="inline-flex items-center gap-2 text-[13px] font-medium px-6 py-3.5 border border-line text-ink2 transition-all hover:-translate-y-0.5 hover:border-brand hover:text-brand motion-reduce:transform-none"
+          >
+            Get in touch
+          </a>
         </div>
       </div>
     </section>
 
-    <section class="sec" id="about">
-      <div class="wrap">
-        <div class="sec-head">
-          <span class="sec-tag">01 / ABOUT</span>
-          <div class="sec-line"></div>
+    <!-- ABOUT -->
+    <section class="px-6 py-[90px] border-b border-line" id="about">
+      <div class="max-w-[1100px] mx-auto">
+        <div class="flex items-baseline gap-4 mb-12">
+          <span class="text-xs text-brand tracking-wide">01 / ABOUT</span>
+          <div class="flex-1 h-px bg-line"></div>
         </div>
-        <div class="about-grid">
-          <div class="about-text" data-reveal>
-            <p>
+
+        <div class="grid grid-cols-1 md:grid-cols-[1.3fr_1fr] gap-16">
+          <div
+            data-reveal
+            class="opacity-0 translate-y-4 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none"
+          >
+            <p class="text-[#c9c5bd] text-base mb-[18px] max-w-[560px]">
               I'm a full-stack developer based in Nairobi, building products
               with
-              <strong
+              <strong class="text-ink2"
                 >Laravel 11, Livewire 3, Alpine.js, and Tailwind CSS</strong
               >
               — most of them aimed squarely at the Kenyan market, priced in KES
               and built around how people here actually buy, sell, and book
               services.
             </p>
-            <p>
+            <p class="text-[#c9c5bd] text-base mb-[18px] max-w-[560px]">
               My background spans IT, sales, and fitness before landing in
               software — which means I tend to design for the person actually
               using the product, not just the schema behind it. I learn by
-              shipping: every project in my stack below started as a deliberate
-              attempt to go one level deeper into Laravel.
+              shipping: every project below started as a deliberate attempt to
+              go one level deeper into Laravel.
             </p>
-            <p>
+            <p class="text-[#c9c5bd] text-base mb-[18px] max-w-[560px]">
               Right now I'm exploring AI-augmented workflows — running local
               open-weight models and wiring up MCP-based tooling — alongside
               continued product builds.
             </p>
           </div>
-          <div class="meta-plate" data-reveal>
-            <div class="meta-row">
-              <span>BASE</span><span>Nairobi, Kenya</span>
+
+          <div
+            data-reveal
+            class="opacity-0 translate-y-4 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none bg-panel border border-line p-6 text-[13px] self-start"
+          >
+            <div class="flex justify-between py-2.5 border-b border-line">
+              <span class="text-dim">BASE</span
+              ><span class="text-ink2 text-right">Nairobi, Kenya</span>
             </div>
-            <div class="meta-row">
-              <span>FOCUS</span><span>Laravel / Livewire</span>
+            <div class="flex justify-between py-2.5 border-b border-line">
+              <span class="text-dim">FOCUS</span
+              ><span class="text-ink2 text-right">Laravel / Livewire</span>
             </div>
-            <div class="meta-row">
-              <span>MARKET</span><span>Kenya-first products</span>
+            <div class="flex justify-between py-2.5 border-b border-line">
+              <span class="text-dim">MARKET</span
+              ><span class="text-ink2 text-right">Kenya-first products</span>
             </div>
-            <div class="meta-row">
-              <span>STATUS</span><span>Open to work</span>
+            <div class="flex justify-between py-2.5 border-b border-line">
+              <span class="text-dim">STATUS</span
+              ><span class="text-ink2 text-right">Open to work</span>
             </div>
-            <div class="meta-row">
-              <span>LEVEL</span><span>Beginner → Advanced</span>
+            <div class="flex justify-between py-2.5">
+              <span class="text-dim">LEVEL</span
+              ><span class="text-ink2 text-right">Beginner → Advanced</span>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="sec" id="stack">
-      <div class="wrap">
-        <div class="sec-head">
-          <span class="sec-tag">02 / STACK</span>
-          <div class="sec-line"></div>
+    <!-- STACK -->
+    <section class="px-6 py-[90px] border-b border-line" id="stack">
+      <div class="max-w-[1100px] mx-auto">
+        <div class="flex items-baseline gap-4 mb-12">
+          <span class="text-xs text-brand tracking-wide">02 / STACK</span>
+          <div class="flex-1 h-px bg-line"></div>
         </div>
-        <div class="stack-grid" data-reveal>
-          <div class="stack-item">
-            <span class="num">FRAMEWORK</span>
-            <div class="name">Laravel 11</div>
-            <div class="desc">Backend & architecture</div>
+
+        <div
+          data-reveal
+          class="opacity-0 translate-y-4 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-px bg-line border border-line"
+        >
+          <div
+            class="group bg-panel p-6 px-5 transition-all hover:bg-panel2 hover:-translate-y-0.5 motion-reduce:transform-none cursor-default"
+          >
+            <span class="text-[11px] text-brand block mb-2.5">FRAMEWORK</span>
+            <div class="font-bold text-[17px]">Laravel 11</div>
+            <div
+              class="text-[11px] text-dim mt-1.5 max-h-0 overflow-hidden transition-[max-height] duration-300 group-hover:max-h-10"
+            >
+              Backend & architecture
+            </div>
           </div>
-          <div class="stack-item">
-            <span class="num">REACTIVITY</span>
-            <div class="name">Livewire 3</div>
-            <div class="desc">Server-driven UI</div>
+          <div
+            class="group bg-panel p-6 px-5 transition-all hover:bg-panel2 hover:-translate-y-0.5 motion-reduce:transform-none cursor-default"
+          >
+            <span class="text-[11px] text-brand block mb-2.5">REACTIVITY</span>
+            <div class="font-bold text-[17px]">Livewire 3</div>
+            <div
+              class="text-[11px] text-dim mt-1.5 max-h-0 overflow-hidden transition-[max-height] duration-300 group-hover:max-h-10"
+            >
+              Server-driven UI
+            </div>
           </div>
-          <div class="stack-item">
-            <span class="num">INTERACTION</span>
-            <div class="name">Alpine.js</div>
-            <div class="desc">Lightweight frontend logic</div>
+          <div
+            class="group bg-panel p-6 px-5 transition-all hover:bg-panel2 hover:-translate-y-0.5 motion-reduce:transform-none cursor-default"
+          >
+            <span class="text-[11px] text-brand block mb-2.5">INTERACTION</span>
+            <div class="font-bold text-[17px]">Alpine.js</div>
+            <div
+              class="text-[11px] text-dim mt-1.5 max-h-0 overflow-hidden transition-[max-height] duration-300 group-hover:max-h-10"
+            >
+              Lightweight frontend logic
+            </div>
           </div>
-          <div class="stack-item">
-            <span class="num">STYLING</span>
-            <div class="name">Tailwind CSS</div>
-            <div class="desc">Utility-first design</div>
+          <div
+            class="group bg-panel p-6 px-5 transition-all hover:bg-panel2 hover:-translate-y-0.5 motion-reduce:transform-none cursor-default"
+          >
+            <span class="text-[11px] text-brand block mb-2.5">STYLING</span>
+            <div class="font-bold text-[17px]">Tailwind CSS</div>
+            <div
+              class="text-[11px] text-dim mt-1.5 max-h-0 overflow-hidden transition-[max-height] duration-300 group-hover:max-h-10"
+            >
+              Utility-first design
+            </div>
           </div>
-          <div class="stack-item">
-            <span class="num">DATA</span>
-            <div class="name">MySQL</div>
-            <div class="desc">Relational storage</div>
+          <div
+            class="group bg-panel p-6 px-5 transition-all hover:bg-panel2 hover:-translate-y-0.5 motion-reduce:transform-none cursor-default"
+          >
+            <span class="text-[11px] text-brand block mb-2.5">DATA</span>
+            <div class="font-bold text-[17px]">MySQL</div>
+            <div
+              class="text-[11px] text-dim mt-1.5 max-h-0 overflow-hidden transition-[max-height] duration-300 group-hover:max-h-10"
+            >
+              Relational storage
+            </div>
           </div>
-          <div class="stack-item">
-            <span class="num">AUTH / ACCESS</span>
-            <div class="name">Breeze + Spatie</div>
-            <div class="desc">Roles & permissions</div>
+          <div
+            class="group bg-panel p-6 px-5 transition-all hover:bg-panel2 hover:-translate-y-0.5 motion-reduce:transform-none cursor-default"
+          >
+            <span class="text-[11px] text-brand block mb-2.5"
+              >AUTH / ACCESS</span
+            >
+            <div class="font-bold text-[17px]">Breeze + Spatie</div>
+            <div
+              class="text-[11px] text-dim mt-1.5 max-h-0 overflow-hidden transition-[max-height] duration-300 group-hover:max-h-10"
+            >
+              Roles & permissions
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="sec" id="work" x-data="{ openIndex:null }">
-      <div class="wrap">
-        <div class="sec-head">
-          <span class="sec-tag">03 / SELECTED WORK</span>
-          <div class="sec-line"></div>
+    <!-- WORK -->
+    <section
+      class="px-6 py-[90px] border-b border-line"
+      id="work"
+      x-data="{ openIndex:null }"
+    >
+      <div class="max-w-[1100px] mx-auto">
+        <div class="flex items-baseline gap-4 mb-12">
+          <span class="text-xs text-brand tracking-wide"
+            >03 / SELECTED WORK</span
+          >
+          <div class="flex-1 h-px bg-line"></div>
         </div>
 
-        <div class="filter-row" data-reveal>
+        <div
+          data-reveal
+          class="opacity-0 translate-y-4 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none flex gap-2.5 mb-8 flex-wrap"
+        >
           <button
-            class="filter-btn"
-            :class="filter==='all' && 'active'"
+            class="text-xs px-4 py-2 border transition-colors"
+            :class="filter==='all' ? 'bg-brand text-ink border-brand' : 'border-line text-dim hover:text-ink2 hover:border-dim'"
             @click="filter='all'"
           >
             All
           </button>
           <button
-            class="filter-btn"
-            :class="filter==='live' && 'active'"
+            class="text-xs px-4 py-2 border transition-colors"
+            :class="filter==='live' ? 'bg-brand text-ink border-brand' : 'border-line text-dim hover:text-ink2 hover:border-dim'"
             @click="filter='live'"
           >
             Live / Demo
           </button>
           <button
-            class="filter-btn"
-            :class="filter==='build' && 'active'"
+            class="text-xs px-4 py-2 border transition-colors"
+            :class="filter==='build' ? 'bg-brand text-ink border-brand' : 'border-line text-dim hover:text-ink2 hover:border-dim'"
             @click="filter='build'"
           >
             In Build
           </button>
         </div>
 
-        <div class="plates">
+        <div class="flex flex-col gap-px bg-line border border-line">
+          <!-- Xplore Car Imports -->
           <div
-            class="plate"
-            :class="openIndex===0 && 'open'"
-            @click="openIndex = openIndex===0 ? null : 0"
-            x-show="filter==='all' || filter==='build'"
             data-reveal
+            class="opacity-0 translate-y-4 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none bg-panel p-8 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 hover:bg-panel2 cursor-pointer"
+            x-show="filter==='all' || filter==='live'"
+            @click="openIndex = openIndex===0 ? null : 0"
           >
-            <div class="plate-main">
-              <h3>MotoMarket <span class="chevron">▸</span></h3>
-              <p>
+            <div>
+              <h3 class="font-bold text-2xl mb-2.5 flex items-center gap-2.5">
+                Xplore Car Imports
+                <span
+                  class="text-sm text-brand transition-transform duration-300"
+                  :class="openIndex===0 && 'rotate-90'"
+                  >▸</span
+                >
+              </h3>
+              <p class="text-[#c9c5bd] text-[15px] max-w-[560px] mb-4">
+                A live website for a car import dealership — built around the
+                brand's Velocity Blue / Apex Green identity, presenting
+                inventory and dealership information to prospective buyers.
+              </p>
+              <div class="flex gap-2 flex-wrap">
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Laravel</span
+                >
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Tailwind</span
+                >
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Brand Identity</span
+                >
+              </div>
+              <div
+                class="overflow-hidden transition-[max-height] duration-300 text-[13px] text-dim"
+                :class="openIndex===0 ? 'max-h-[140px] border-t border-line mt-4 pt-4' : 'max-h-0'"
+              >
+                Carries the full brand system — palette, typography, and
+                application mockups — through into a production website, giving
+                the dealership a consistent presence from signage to screen.
+              </div>
+            </div>
+            <div
+              class="text-[12px] min-w-[170px] border-t md:border-t-0 md:border-l border-line pt-4 md:pt-0 mt-4 md:mt-0 md:pl-6"
+            >
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">STATUS</span
+                ><span
+                  class="px-2 py-0.5 text-[10px] tracking-wide bg-brand/10 text-brand border border-branddim"
+                  >LIVE</span
+                >
+              </div>
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">DOMAIN</span><span>Automotive</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-dim">ROLE</span
+                ><span>Full-stack + Brand</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Real Estate Website -->
+          <div
+            data-reveal
+            class="opacity-0 translate-y-4 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none bg-panel p-8 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 hover:bg-panel2 cursor-pointer"
+            x-show="filter==='all' || filter==='live'"
+            @click="openIndex = openIndex===1 ? null : 1"
+          >
+            <div>
+              <h3 class="font-bold text-2xl mb-2.5 flex items-center gap-2.5">
+                Real Estate Website
+                <span
+                  class="text-sm text-brand transition-transform duration-300"
+                  :class="openIndex===1 && 'rotate-90'"
+                  >▸</span
+                >
+              </h3>
+              <p class="text-[#c9c5bd] text-[15px] max-w-[560px] mb-4">
+                A property listings website built for buyers and renters to
+                browse available real estate, with structured listing pages and
+                inquiry handling.
+              </p>
+              <div class="flex gap-2 flex-wrap">
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Laravel</span
+                >
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Livewire</span
+                >
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >MySQL</span
+                >
+              </div>
+              <div
+                class="overflow-hidden transition-[max-height] duration-300 text-[13px] text-dim"
+                :class="openIndex===1 ? 'max-h-[140px] border-t border-line mt-4 pt-4' : 'max-h-0'"
+              >
+                Presents property listings with filterable search, photo
+                galleries, and direct inquiry forms — built to give prospective
+                buyers and tenants a clear, browsable catalogue of available
+                units.
+              </div>
+            </div>
+            <div
+              class="text-[12px] min-w-[170px] border-t md:border-t-0 md:border-l border-line pt-4 md:pt-0 mt-4 md:mt-0 md:pl-6"
+            >
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">STATUS</span
+                ><span
+                  class="px-2 py-0.5 text-[10px] tracking-wide bg-brand/10 text-brand border border-branddim"
+                  >LIVE / DEMO</span
+                >
+              </div>
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">DOMAIN</span><span>Real Estate</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-dim">ROLE</span><span>Full-stack</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- POS System -->
+          <div
+            data-reveal
+            class="opacity-0 translate-y-4 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none bg-panel p-8 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 hover:bg-panel2 cursor-pointer"
+            x-show="filter==='all' || filter==='live'"
+            @click="openIndex = openIndex===2 ? null : 2"
+          >
+            <div>
+              <h3 class="font-bold text-2xl mb-2.5 flex items-center gap-2.5">
+                POS System
+                <span
+                  class="text-sm text-brand transition-transform duration-300"
+                  :class="openIndex===2 && 'rotate-90'"
+                  >▸</span
+                >
+              </h3>
+              <p class="text-[#c9c5bd] text-[15px] max-w-[560px] mb-4">
+                A general-purpose point-of-sale system covering checkout,
+                inventory, and sales reporting for retail businesses.
+              </p>
+              <div class="flex gap-2 flex-wrap">
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Laravel</span
+                >
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Livewire</span
+                >
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >MySQL</span
+                >
+              </div>
+              <div
+                class="overflow-hidden transition-[max-height] duration-300 text-[13px] text-dim"
+                :class="openIndex===2 ? 'max-h-[140px] border-t border-line mt-4 pt-4' : 'max-h-0'"
+              >
+                Handles end-to-end checkout flow, stock-level tracking, and
+                sales reporting in one system — built as a reusable foundation
+                that the Thrift and Chemist POS variants both build on.
+              </div>
+            </div>
+            <div
+              class="text-[12px] min-w-[170px] border-t md:border-t-0 md:border-l border-line pt-4 md:pt-0 mt-4 md:mt-0 md:pl-6"
+            >
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">STATUS</span
+                ><span
+                  class="px-2 py-0.5 text-[10px] tracking-wide bg-brand/10 text-brand border border-branddim"
+                  >LIVE / DEMO</span
+                >
+              </div>
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">DOMAIN</span><span>Retail / POS</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-dim">ROLE</span><span>Full-stack</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chemist POS -->
+          <div
+            data-reveal
+            class="opacity-0 translate-y-4 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none bg-panel p-8 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 hover:bg-panel2 cursor-pointer"
+            x-show="filter==='all' || filter==='live'"
+            @click="openIndex = openIndex===3 ? null : 3"
+          >
+            <div>
+              <h3 class="font-bold text-2xl mb-2.5 flex items-center gap-2.5">
+                Chemist POS
+                <span
+                  class="text-sm text-brand transition-transform duration-300"
+                  :class="openIndex===3 && 'rotate-90'"
+                  >▸</span
+                >
+              </h3>
+              <p class="text-[#c9c5bd] text-[15px] max-w-[560px] mb-4">
+                A pharmacy-specific point-of-sale system handling prescription
+                items, batch and expiry tracking, and regulated stock control.
+              </p>
+              <div class="flex gap-2 flex-wrap">
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Laravel</span
+                >
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Livewire</span
+                >
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >MySQL</span
+                >
+              </div>
+              <div
+                class="overflow-hidden transition-[max-height] duration-300 text-[13px] text-dim"
+                :class="openIndex===3 ? 'max-h-[140px] border-t border-line mt-4 pt-4' : 'max-h-0'"
+              >
+                Extends the core POS foundation with pharmacy-specific needs —
+                batch numbers, expiry-date tracking, and prescription-linked
+                sales — so stock that's past date or unauthorized for sale is
+                flagged before checkout.
+              </div>
+            </div>
+            <div
+              class="text-[12px] min-w-[170px] border-t md:border-t-0 md:border-l border-line pt-4 md:pt-0 mt-4 md:mt-0 md:pl-6"
+            >
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">STATUS</span
+                ><span
+                  class="px-2 py-0.5 text-[10px] tracking-wide bg-brand/10 text-brand border border-branddim"
+                  >LIVE / DEMO</span
+                >
+              </div>
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">DOMAIN</span
+                ><span>Pharmacy / Retail</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-dim">ROLE</span><span>Full-stack</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Blog Website -->
+          <div
+            data-reveal
+            class="opacity-0 translate-y-4 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none bg-panel p-8 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 hover:bg-panel2 cursor-pointer"
+            x-show="filter==='all' || filter==='live'"
+            @click="openIndex = openIndex===4 ? null : 4"
+          >
+            <div>
+              <h3 class="font-bold text-2xl mb-2.5 flex items-center gap-2.5">
+                Blog Website
+                <span
+                  class="text-sm text-brand transition-transform duration-300"
+                  :class="openIndex===4 && 'rotate-90'"
+                  >▸</span
+                >
+              </h3>
+              <p class="text-[#c9c5bd] text-[15px] max-w-[560px] mb-4">
+                A publishing platform for long-form articles, with category
+                organization and a clean reading experience for visitors.
+              </p>
+              <div class="flex gap-2 flex-wrap">
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Laravel</span
+                >
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Livewire</span
+                >
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Tailwind</span
+                >
+              </div>
+              <div
+                class="overflow-hidden transition-[max-height] duration-300 text-[13px] text-dim"
+                :class="openIndex===4 ? 'max-h-[140px] border-t border-line mt-4 pt-4' : 'max-h-0'"
+              >
+                Built around clean typography and category-based organization,
+                with an editor-friendly publishing flow for managing posts,
+                drafts, and tags.
+              </div>
+            </div>
+            <div
+              class="text-[12px] min-w-[170px] border-t md:border-t-0 md:border-l border-line pt-4 md:pt-0 mt-4 md:mt-0 md:pl-6"
+            >
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">STATUS</span
+                ><span
+                  class="px-2 py-0.5 text-[10px] tracking-wide bg-brand/10 text-brand border border-branddim"
+                  >LIVE / DEMO</span
+                >
+              </div>
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">DOMAIN</span><span>Publishing</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-dim">ROLE</span><span>Full-stack</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- T.G Solution -->
+          <div
+            data-reveal
+            class="opacity-0 translate-y-4 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none bg-panel p-8 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 hover:bg-panel2 cursor-pointer"
+            x-show="filter==='all' || filter==='live'"
+            @click="openIndex = openIndex===5 ? null : 5"
+          >
+            <div>
+              <h3 class="font-bold text-2xl mb-2.5 flex items-center gap-2.5">
+                T.G Solution
+                <span
+                  class="text-sm text-brand transition-transform duration-300"
+                  :class="openIndex===5 && 'rotate-90'"
+                  >▸</span
+                >
+              </h3>
+              <p class="text-[#c9c5bd] text-[15px] max-w-[560px] mb-4">
+                A fleet operations platform that gives logistics managers a
+                single source of truth on vehicle location and fuel usage —
+                built to cut fuel loss and surface inefficiencies before they
+                become costly.
+              </p>
+              <div class="flex gap-2 flex-wrap">
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Laravel</span
+                >
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Fleet Mgmt</span
+                >
+              </div>
+              <div
+                class="overflow-hidden transition-[max-height] duration-300 text-[13px] text-dim"
+                :class="openIndex===5 ? 'max-h-[140px] border-t border-line mt-4 pt-4' : 'max-h-0'"
+              >
+                Consolidates live GPS positioning and fuel-consumption data into
+                one operational dashboard, replacing manual fleet logs with
+                automated tracking that flags anomalies — unexpected detours,
+                refuelling discrepancies, idle time — as they happen rather than
+                at month-end.
+              </div>
+            </div>
+            <div
+              class="text-[12px] min-w-[170px] border-t md:border-t-0 md:border-l border-line pt-4 md:pt-0 mt-4 md:mt-0 md:pl-6"
+            >
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">STATUS</span
+                ><span
+                  class="px-2 py-0.5 text-[10px] tracking-wide bg-white/5 text-dim border border-line"
+                  >IN BUILD</span
+                >
+              </div>
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">DOMAIN</span><span>Logistics</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-dim">ROLE</span><span>Full-stack</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- AuraCare -->
+          <div
+            data-reveal
+            class="opacity-0 translate-y-4 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none bg-panel p-8 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 hover:bg-panel2 cursor-pointer"
+            x-show="filter==='all' || filter==='build'"
+            @click="openIndex = openIndex===6 ? null : 6"
+          >
+            <div>
+              <h3 class="font-bold text-2xl mb-2.5 flex items-center gap-2.5">
+                AuraCare
+                <span
+                  class="text-sm text-brand transition-transform duration-300"
+                  :class="openIndex===6 && 'rotate-90'"
+                  >▸</span
+                >
+              </h3>
+              <p class="text-[#c9c5bd] text-[15px] max-w-[560px] mb-4">
+                Predictive wellness tracker integrating pattern discovery
+                engines to provide personalized health insights.
+              </p>
+              <div class="flex gap-2 flex-wrap">
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Laravel</span
+                >
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >AI Integration</span
+                >
+              </div>
+              <div
+                class="overflow-hidden transition-[max-height] duration-300 text-[13px] text-dim"
+                :class="openIndex===6 ? 'max-h-[140px] border-t border-line mt-4 pt-4' : 'max-h-0'"
+              >
+                Surfaces patterns in a user's logged wellness data over time,
+                using an AI-driven discovery layer to flag trends before they
+                become problems rather than just recording history.
+              </div>
+            </div>
+            <div
+              class="text-[12px] min-w-[170px] border-t md:border-t-0 md:border-l border-line pt-4 md:pt-0 mt-4 md:mt-0 md:pl-6"
+            >
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">STATUS</span
+                ><span
+                  class="px-2 py-0.5 text-[10px] tracking-wide bg-white/5 text-dim border border-line"
+                  >IN BUILD</span
+                >
+              </div>
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">DOMAIN</span
+                ><span>Health & wellness</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-dim">ROLE</span><span>Full-stack</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Thrift POS -->
+          <div
+            data-reveal
+            class="opacity-0 translate-y-4 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none bg-panel p-8 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 hover:bg-panel2 cursor-pointer"
+            x-show="filter==='all' || filter==='build'"
+            @click="openIndex = openIndex===7 ? null : 7"
+          >
+            <div>
+              <h3 class="font-bold text-2xl mb-2.5 flex items-center gap-2.5">
+                Thrift POS System
+                <span
+                  class="text-sm text-brand transition-transform duration-300"
+                  :class="openIndex===7 && 'rotate-90'"
+                  >▸</span
+                >
+              </h3>
+              <p class="text-[#c9c5bd] text-[15px] max-w-[560px] mb-4">
+                Serialized inventory and authentication tracking system
+                specifically designed for high-end thrift retail.
+              </p>
+              <div class="flex gap-2 flex-wrap">
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Laravel</span
+                >
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >MediaLibrary</span
+                >
+              </div>
+              <div
+                class="overflow-hidden transition-[max-height] duration-300 text-[13px] text-dim"
+                :class="openIndex===7 ? 'max-h-[140px] border-t border-line mt-4 pt-4' : 'max-h-0'"
+              >
+                Each item gets a serialized identity and photo-backed
+                authentication record, so high-value thrifted pieces can be
+                tracked individually through intake, listing, and sale rather
+                than as generic stock.
+              </div>
+            </div>
+            <div
+              class="text-[12px] min-w-[170px] border-t md:border-t-0 md:border-l border-line pt-4 md:pt-0 mt-4 md:mt-0 md:pl-6"
+            >
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">STATUS</span
+                ><span
+                  class="px-2 py-0.5 text-[10px] tracking-wide bg-white/5 text-dim border border-line"
+                  >IN BUILD</span
+                >
+              </div>
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">DOMAIN</span><span>Retail / POS</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-dim">ROLE</span><span>Full-stack</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- MotoMarket -->
+          <div
+            data-reveal
+            class="opacity-0 translate-y-4 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none bg-panel p-8 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 hover:bg-panel2 cursor-pointer"
+            x-show="filter==='all' || filter==='build'"
+            @click="openIndex = openIndex===8 ? null : 8"
+          >
+            <div>
+              <h3 class="font-bold text-2xl mb-2.5 flex items-center gap-2.5">
+                MotoMarket
+                <span
+                  class="text-sm text-brand transition-transform duration-300"
+                  :class="openIndex===8 && 'rotate-90'"
+                  >▸</span
+                >
+              </h3>
+              <p class="text-[#c9c5bd] text-[15px] max-w-[560px] mb-4">
                 A motorcycle listing marketplace built for the Kenyan market —
                 full Livewire component architecture, KES-native pricing, and a
                 dark industrial UI.
               </p>
-              <div class="plate-tags">
-                <span class="tag">Laravel 11</span
-                ><span class="tag">Livewire 3</span
-                ><span class="tag">Alpine.js</span
-                ><span class="tag">Tailwind</span>
+              <div class="flex gap-2 flex-wrap">
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Laravel 11</span
+                >
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Livewire 3</span
+                >
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Alpine.js</span
+                >
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Tailwind</span
+                >
               </div>
-              <div class="plate-detail">
+              <div
+                class="overflow-hidden transition-[max-height] duration-300 text-[13px] text-dim"
+                :class="openIndex===8 ? 'max-h-[140px] border-t border-line mt-4 pt-4' : 'max-h-0'"
+              >
                 Built with five core Livewire components covering listings,
                 filters, seller dashboards, messaging, and admin moderation —
                 designed around how motorcycles are actually bought and sold
                 locally.
               </div>
             </div>
-            <div class="plate-specs">
-              <div class="spec-row">
-                <span>STATUS</span
-                ><span class="status status-build">IN BUILD</span>
+            <div
+              class="text-[12px] min-w-[170px] border-t md:border-t-0 md:border-l border-line pt-4 md:pt-0 mt-4 md:mt-0 md:pl-6"
+            >
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">STATUS</span
+                ><span
+                  class="px-2 py-0.5 text-[10px] tracking-wide bg-white/5 text-dim border border-line"
+                  >IN BUILD</span
+                >
               </div>
-              <div class="spec-row"><span>MARKET</span><span>Kenya</span></div>
-              <div class="spec-row">
-                <span>ROLE</span><span>Full-stack</span>
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">MARKET</span><span>Kenya</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-dim">ROLE</span><span>Full-stack</span>
               </div>
             </div>
           </div>
 
+          <!-- BookSafi -->
           <div
-            class="plate"
-            :class="openIndex===1 && 'open'"
-            @click="openIndex = openIndex===1 ? null : 1"
-            x-show="filter==='all' || filter==='build'"
             data-reveal
+            class="opacity-0 translate-y-4 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none bg-panel p-8 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 hover:bg-panel2 cursor-pointer"
+            x-show="filter==='all' || filter==='build'"
+            @click="openIndex = openIndex===9 ? null : 9"
           >
-            <div class="plate-main">
-              <h3>BookSafi <span class="chevron">▸</span></h3>
-              <p>
+            <div>
+              <h3 class="font-bold text-2xl mb-2.5 flex items-center gap-2.5">
+                BookSafi
+                <span
+                  class="text-sm text-brand transition-transform duration-300"
+                  :class="openIndex===9 && 'rotate-90'"
+                  >▸</span
+                >
+              </h3>
+              <p class="text-[#c9c5bd] text-[15px] max-w-[560px] mb-4">
                 A booking platform for Kenya's service industry — connecting
                 providers and clients through a structured, role-based Laravel
                 application.
               </p>
-              <div class="plate-tags">
-                <span class="tag">Laravel</span><span class="tag">Livewire</span
-                ><span class="tag">MySQL</span>
+              <div class="flex gap-2 flex-wrap">
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Laravel</span
+                >
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Livewire</span
+                >
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >MySQL</span
+                >
               </div>
-              <div class="plate-detail">
+              <div
+                class="overflow-hidden transition-[max-height] duration-300 text-[13px] text-dim"
+                :class="openIndex===9 ? 'max-h-[140px] border-t border-line mt-4 pt-4' : 'max-h-0'"
+              >
                 Focused on low-friction booking flows for local service
                 providers, with role separation between clients and providers
                 baked into the schema from day one.
               </div>
             </div>
-            <div class="plate-specs">
-              <div class="spec-row">
-                <span>STATUS</span
-                ><span class="status status-build">IN BUILD</span>
+            <div
+              class="text-[12px] min-w-[170px] border-t md:border-t-0 md:border-l border-line pt-4 md:pt-0 mt-4 md:mt-0 md:pl-6"
+            >
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">STATUS</span
+                ><span
+                  class="px-2 py-0.5 text-[10px] tracking-wide bg-white/5 text-dim border border-line"
+                  >IN BUILD</span
+                >
               </div>
-              <div class="spec-row"><span>MARKET</span><span>Kenya</span></div>
-              <div class="spec-row">
-                <span>ROLE</span><span>Full-stack</span>
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">MARKET</span><span>Kenya</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-dim">ROLE</span><span>Full-stack</span>
               </div>
             </div>
           </div>
 
+          <!-- Rentals Management System -->
           <div
-            class="plate"
-            :class="openIndex===2 && 'open'"
-            @click="openIndex = openIndex===2 ? null : 2"
-            x-show="filter==='all' || filter==='live'"
             data-reveal
+            class="opacity-0 translate-y-4 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none bg-panel p-8 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 hover:bg-panel2 cursor-pointer"
+            x-show="filter==='all' || filter==='live'"
+            @click="openIndex = openIndex===10 ? null : 10"
           >
-            <div class="plate-main">
-              <h3>Rentals Management System <span class="chevron">▸</span></h3>
-              <p>
+            <div>
+              <h3 class="font-bold text-2xl mb-2.5 flex items-center gap-2.5">
+                Rentals Management System
+                <span
+                  class="text-sm text-brand transition-transform duration-300"
+                  :class="openIndex===10 && 'rotate-90'"
+                  >▸</span
+                >
+              </h3>
+              <p class="text-[#c9c5bd] text-[15px] max-w-[560px] mb-4">
                 A full property management admin suite with role-based access
                 for Admins, Landlords, and Tenants — handling leases, units, and
                 rent collection end to end.
               </p>
-              <div class="plate-tags">
-                <span class="tag">Laravel</span><span class="tag">Breeze</span
-                ><span class="tag">Spatie RBAC</span>
+              <div class="flex gap-2 flex-wrap">
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Laravel</span
+                >
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Breeze</span
+                >
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Spatie RBAC</span
+                >
               </div>
-              <div class="plate-detail">
+              <div
+                class="overflow-hidden transition-[max-height] duration-300 text-[13px] text-dim"
+                :class="openIndex===10 ? 'max-h-[140px] border-t border-line mt-4 pt-4' : 'max-h-0'"
+              >
                 Three distinct dashboards sharing one underlying schema, with
                 permission boundaries enforced via Spatie roles rather than
                 ad-hoc checks scattered through controllers.
               </div>
             </div>
-            <div class="plate-specs">
-              <div class="spec-row">
-                <span>STATUS</span
-                ><span class="status status-live">LIVE / DEMO</span>
+            <div
+              class="text-[12px] min-w-[170px] border-t md:border-t-0 md:border-l border-line pt-4 md:pt-0 mt-4 md:mt-0 md:pl-6"
+            >
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">STATUS</span
+                ><span
+                  class="px-2 py-0.5 text-[10px] tracking-wide bg-brand/10 text-brand border border-branddim"
+                  >LIVE / DEMO</span
+                >
               </div>
-              <div class="spec-row">
-                <span>ROLES</span><span>3 (Admin/LL/Tenant)</span>
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">ROLES</span
+                ><span>3 (Admin/LL/Tenant)</span>
               </div>
-              <div class="spec-row">
-                <span>ROLE</span><span>Full-stack</span>
+              <div class="flex justify-between">
+                <span class="text-dim">ROLE</span><span>Full-stack</span>
               </div>
             </div>
           </div>
 
+          <!-- Job Listing Platform -->
           <div
-            class="plate"
-            :class="openIndex===3 && 'open'"
-            @click="openIndex = openIndex===3 ? null : 3"
-            x-show="filter==='all' || filter==='live'"
             data-reveal
+            class="opacity-0 translate-y-4 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none bg-panel p-8 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 hover:bg-panel2 cursor-pointer"
+            x-show="filter==='all' || filter==='live'"
+            @click="openIndex = openIndex===11 ? null : 11"
           >
-            <div class="plate-main">
-              <h3>Job Listing Platform <span class="chevron">▸</span></h3>
-              <p>
+            <div>
+              <h3 class="font-bold text-2xl mb-2.5 flex items-center gap-2.5">
+                Job Listing Platform
+                <span
+                  class="text-sm text-brand transition-transform duration-300"
+                  :class="openIndex===11 && 'rotate-90'"
+                  >▸</span
+                >
+              </h3>
+              <p class="text-[#c9c5bd] text-[15px] max-w-[560px] mb-4">
                 A two-sided job board where employers post roles and job seekers
                 apply — a foundational build for mastering Laravel's auth and
                 CRUD patterns at scale.
               </p>
-              <div class="plate-tags">
-                <span class="tag">Laravel</span><span class="tag">MySQL</span
-                ><span class="tag">Tailwind</span>
+              <div class="flex gap-2 flex-wrap">
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Laravel</span
+                >
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >MySQL</span
+                >
+                <span
+                  class="text-[11px] px-2.5 py-1 border border-line text-dim"
+                  >Tailwind</span
+                >
               </div>
-              <div class="plate-detail">
+              <div
+                class="overflow-hidden transition-[max-height] duration-300 text-[13px] text-dim"
+                :class="openIndex===11 ? 'max-h-[140px] border-t border-line mt-4 pt-4' : 'max-h-0'"
+              >
                 Built to practice clean separation between employer and
                 applicant flows, including application tracking and listing
                 status management.
               </div>
             </div>
-            <div class="plate-specs">
-              <div class="spec-row">
-                <span>STATUS</span
-                ><span class="status status-live">LIVE / DEMO</span>
+            <div
+              class="text-[12px] min-w-[170px] border-t md:border-t-0 md:border-l border-line pt-4 md:pt-0 mt-4 md:mt-0 md:pl-6"
+            >
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">STATUS</span
+                ><span
+                  class="px-2 py-0.5 text-[10px] tracking-wide bg-brand/10 text-brand border border-branddim"
+                  >LIVE / DEMO</span
+                >
               </div>
-              <div class="spec-row">
-                <span>TYPE</span><span>Two-sided</span>
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">TYPE</span><span>Two-sided</span>
               </div>
-              <div class="spec-row">
-                <span>ROLE</span><span>Full-stack</span>
+              <div class="flex justify-between">
+                <span class="text-dim">ROLE</span><span>Full-stack</span>
               </div>
             </div>
           </div>
 
+          <!-- Instagram Clone -->
           <div
-            class="plate"
-            :class="openIndex===4 && 'open'"
-            @click="openIndex = openIndex===4 ? null : 4"
-            x-show="filter==='all' || filter==='live'"
             data-reveal
+            class="opacity-0 translate-y-4 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none bg-panel p-8 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 hover:bg-panel2 cursor-pointer"
+            x-show="filter==='all' || filter==='live'"
+            @click="openIndex = openIndex===12 ? null : 12"
           >
-            <div class="plate-main">
-              <h3>Instagram Clone <span class="chevron">▸</span></h3>
-              <p>
-                A full-stack social feed clone covering image uploads, likes,
-                follows, and real-time-feeling interactions — built as a deep
-                dive into Laravel + Livewire fundamentals.
-              </p>
-              <div class="plate-tags">
-                <span class="tag">Laravel</span><span class="tag">Livewire</span
-                ><span class="tag">MySQL</span>
+            <div
+              class="text-[12px] min-w-[170px] border-t md:border-t-0 md:border-l border-line pt-4 md:pt-0 mt-4 md:mt-0 md:pl-6"
+            >
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">STATUS</span
+                ><span
+                  class="px-2 py-0.5 text-[10px] tracking-wide bg-brand/10 text-brand border border-branddim"
+                >
+                  DEMO</span
+                >
               </div>
-              <div class="plate-detail">
-                Used to practice reactive UI patterns in Livewire — optimistic
-                UI updates, file uploads, and feed pagination without a heavy JS
-                framework.
+              <div class="flex justify-between mb-2">
+                <span class="text-dim">TYPE</span><span>Social app</span>
               </div>
-            </div>
-            <div class="plate-specs">
-              <div class="spec-row">
-                <span>STATUS</span
-                ><span class="status status-live">LIVE / DEMO</span>
-              </div>
-              <div class="spec-row">
-                <span>TYPE</span><span>Social app</span>
-              </div>
-              <div class="spec-row">
-                <span>ROLE</span><span>Full-stack</span>
+              <div class="flex justify-between">
+                <span class="text-dim">ROLE</span><span>Full-stack</span>
               </div>
             </div>
           </div>
@@ -446,19 +1216,37 @@
       </div>
     </section>
 
-    <section class="sec" id="contact" style="border-bottom: none">
-      <div class="wrap">
-        <div class="contact-box" data-reveal>
-          <h2>Let's build something.</h2>
-          <p>Open to freelance work, collaborations, and full-stack roles.</p>
-          <div class="contact-links">
-            <button class="btn btn-primary" @click="copyEmail()">
-              Copy email <span x-ref="copyMsg" class="copy-feedback"></span>
+    <!-- CONTACT -->
+    <section class="px-6 py-[90px]" id="contact">
+      <div class="max-w-[1100px] mx-auto">
+        <div
+          data-reveal
+          class="opacity-0 translate-y-4 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none bg-panel border border-line p-14 px-10 text-center"
+        >
+          <h2 class="font-bold text-[clamp(28px,5vw,44px)] mb-4">
+            Let's build something.
+          </h2>
+          <p class="text-dim mb-8">
+            Open to freelance work, collaborations, and full-stack roles.
+          </p>
+          <div class="flex justify-center gap-4 flex-wrap">
+            <button
+              class="inline-flex items-center gap-2 text-[13px] font-medium px-6 py-3.5 border border-brand bg-brand text-ink transition-all hover:-translate-y-0.5 hover:bg-[#5cf0a3] motion-reduce:transform-none"
+              @click="copyEmail()"
+            >
+              Copy email
+              <span x-ref="copyMsg" class="text-[11px] text-ink/70"></span>
             </button>
-            <a href="https://github.com/yourhandle" class="btn btn-ghost"
+            <a
+              href="https://github.com/jimmywachira"
+              target="_blank"
+              class="inline-flex items-center gap-2 text-[13px] font-medium px-6 py-3.5 border border-line text-ink2 transition-all hover:-translate-y-0.5 hover:border-brand hover:text-brand motion-reduce:transform-none"
               >GitHub</a
             >
-            <a href="https://linkedin.com/in/yourhandle" class="btn btn-ghost"
+            <a
+              href="https://www.linkedin.com/in/james-ndegwa-55312a187/"
+              target="_blank"
+              class="inline-flex items-center gap-2 text-[13px] font-medium px-6 py-3.5 border border-line text-ink2 transition-all hover:-translate-y-0.5 hover:border-brand hover:text-brand motion-reduce:transform-none"
               >LinkedIn</a
             >
           </div>
@@ -466,13 +1254,106 @@
       </div>
     </section>
 
-    <footer>
-      © 2026 Jimmy. Built with Laravel-grade discipline, shipped in plain HTML.
+    <footer class="border-t border-line bg-panel">
+      <div class="max-w-[1100px] mx-auto px-6 py-16">
+        <div class="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr] gap-12">
+          <!-- Brand -->
+          <div>
+            <div class="text-sm font-semibold tracking-wide mb-4">
+              JIMMY<span class="text-brand">.</span>DEV
+            </div>
+            <p class="text-dim text-sm max-w-[320px] mb-6">
+              Full-stack Laravel developer based in Nairobi, building
+              production-ready web platforms for the Kenyan market — from fleet
+              logistics and POS systems to real estate and publishing platforms.
+            </p>
+            <div
+              class="flex items-center gap-2.5 text-[12px] text-brand uppercase tracking-[1px]"
+            >
+              <span
+                class="w-2 h-2 bg-brand rounded-full inline-block animate-pulse-glow motion-reduce:animate-none"
+              ></span>
+              Available for select work
+            </div>
+          </div>
+
+          <!-- Navigation -->
+          <div>
+            <div class="text-xs text-brand tracking-wide mb-4">NAVIGATE</div>
+            <ul class="flex flex-col gap-3 text-sm text-dim">
+              <li>
+                <a href="#about" class="hover:text-brand transition-colors"
+                  >About</a
+                >
+              </li>
+              <li>
+                <a href="#stack" class="hover:text-brand transition-colors"
+                  >Stack</a
+                >
+              </li>
+              <li>
+                <a href="#work" class="hover:text-brand transition-colors"
+                  >Selected Work</a
+                >
+              </li>
+              <li>
+                <a href="#contact" class="hover:text-brand transition-colors"
+                  >Contact</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- Connect -->
+          <div>
+            <div class="text-xs text-brand tracking-wide mb-4">CONNECT</div>
+            <ul class="flex flex-col gap-3 text-sm text-dim">
+              <li>
+                <button
+                  @click="copyEmail()"
+                  class="hover:text-brand transition-colors text-left"
+                >
+                  jwachira40@gmail.com
+                  <span x-ref="copyMsg" class="text-[11px] text-brand"></span>
+                </button>
+              </li>
+              <li>
+                <a
+                  href="https://github.com/jimmywachira"
+                  target="_blank"
+                  class="hover:text-brand transition-colors"
+                  >GitHub ↗</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://www.linkedin.com/in/james-ndegwa-55312a187/"
+                  target="_blank"
+                  class="hover:text-brand transition-colors"
+                  >LinkedIn ↗</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div
+          class="mt-12 pt-8 border-t border-line flex flex-col sm:flex-row items-center justify-between gap-4"
+        >
+          <span class="text-xs text-dim"
+            >© 2026 James "Jimmy" Wachira. All rights reserved.</span
+          >
+          <span class="text-xs text-dim"
+            >Built with Laravel, Livewire & Tailwind — shipped from
+            Nairobi.</span
+          >
+        </div>
+      </div>
     </footer>
 
     <button
-      class="to-top"
-      :class="showTop && 'show'"
+      class="fixed bottom-6 right-6 w-11 h-11 border border-line bg-panel text-brand flex items-center justify-center cursor-pointer transition-all z-[60] motion-reduce:transition-none"
+      :class="showTop ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'"
       @click="window.scrollTo({top:0, behavior:'smooth'})"
       aria-label="Back to top"
     >
@@ -485,7 +1366,10 @@
         const obs = new IntersectionObserver(
           (entries) => {
             entries.forEach((e) => {
-              if (e.isIntersecting) e.target.classList.add("is-visible");
+              if (e.isIntersecting) {
+                e.target.classList.remove("opacity-0", "translate-y-4");
+                e.target.classList.add("opacity-100", "translate-y-0");
+              }
             });
           },
           { threshold: 0.15 },
