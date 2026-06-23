@@ -1,0 +1,50 @@
+<header>
+  <nav>
+    <div class="logo">JIMMY<span>.</span>DEV</div>
+    <div class="navlinks">
+      <a href="#about" :class="active === 'about' && 'active'">About</a>
+      <a href="#stack" :class="active === 'stack' && 'active'">Stack</a>
+      <a href="#work" :class="active === 'work' && 'active'">Work</a>
+      <a href="#contact" :class="active === 'contact' && 'active'">Contact</a>
+    </div>
+    <button
+      class="burger"
+      @click="menuOpen = !menuOpen"
+      aria-label="Toggle menu"
+    >
+      <span
+        :style="menuOpen && 'transform:translateY(7px) rotate(45deg)'"
+      ></span>
+      <span :style="menuOpen && 'opacity:0'"></span>
+      <span
+        :style="menuOpen && 'transform:translateY(-7px) rotate(-45deg)'"
+      ></span>
+    </button>
+  </nav>
+  <div class="mobile-menu" :class="menuOpen && 'open'">
+    <a
+      href="#about"
+      @click="menuOpen=false"
+      :class="active === 'about' && 'active'"
+      >About</a
+    >
+    <a
+      href="#stack"
+      @click="menuOpen=false"
+      :class="active === 'stack' && 'active'"
+      >Stack</a
+    >
+    <a
+      href="#work"
+      @click="menuOpen=false"
+      :class="active === 'work' && 'active'"
+      >Work</a
+    >
+    <a
+      href="#contact"
+      @click="menuOpen=false"
+      :class="active === 'contact' && 'active'"
+      >Contact</a
+    >
+  </div>
+</header>
